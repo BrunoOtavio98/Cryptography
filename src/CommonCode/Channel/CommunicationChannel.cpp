@@ -16,7 +16,7 @@ void CommunicationChannel::RegisterAgent(const Agent::GenericAgent &agent)
     agent_mailbox_[agent] = {};
 }
 
-bool CommunicationChannel::SendMessage(const Agent::GenericAgent &agent, const std::string &message)
+bool CommunicationChannel::SendMessage(const Agent::GenericAgent &agent, const std::string &message, const std::string &agent_id_to_receive)
 {    
     auto agent_receivers = agent_mailbox_.find(agent);
     if(agent_receivers != agent_mailbox_.end())
@@ -24,7 +24,9 @@ bool CommunicationChannel::SendMessage(const Agent::GenericAgent &agent, const s
         auto list_receivers = agent_mailbox_[agent];
         for(auto receiver : list_receivers)
         {
-            receiver.ReceiveMessage(message);
+            if( agent_id_to_receive.length() == 0 || (receiver.GetAgentId() == agent_id_to_receive) ) {
+                receiver.ReceiveMessage(message, agent_id_to_receive);
+            }
         }
     }
     return true;

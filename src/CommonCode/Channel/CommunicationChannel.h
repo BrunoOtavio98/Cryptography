@@ -18,7 +18,7 @@ public:
     CommunicationChannel();
     ~CommunicationChannel();
     void RegisterAgent(const Agent::GenericAgent &agent);
-    bool SendMessage(const Agent::GenericAgent &agent, const std::string &message);
+    bool SendMessage(const Agent::GenericAgent &agent, const std::string &message, const std::string &agent_id_to_receive);
     bool ListenToAgent(const Agent::GenericAgent &agent, const Agent::GenericAgent &agent_to_listen);
     bool ListenToAllAgents(const Agent::GenericAgent &agent);
 

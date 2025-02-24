@@ -15,13 +15,13 @@ GenericAgent::~GenericAgent() {
 
 }
 
-void GenericAgent::ReceiveMessage(const std::string &message) {
+void GenericAgent::ReceiveMessage(const std::string &message, const std::string &agent_id_that_sent) {
     std::cout << "Agent: " << agent_id_ << " received message: " << message << std::endl;
 }
 
-void GenericAgent::SendMessage(const std::string &message) {
+void GenericAgent::SendMessage(const std::string &message, const std::string &agent_id_to_send) {
     std::cout << "Agent: " << agent_id_ << " sending message: " << message << std::endl;
-    channel_->SendMessage(*this, message);
+    channel_->SendMessage(*this, message, agent_id_to_send);
 }
 
 }
