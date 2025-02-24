@@ -20,6 +20,7 @@ public:
     void RegisterAgent(const Agent::GenericAgent &agent);
     bool SendMessage(const Agent::GenericAgent &agent, const std::string &message);
     bool ListenToAgent(const Agent::GenericAgent &agent, const Agent::GenericAgent &agent_to_listen);
+    bool ListenToAllAgents(const Agent::GenericAgent &agent);
 
 private:
     std::map<Agent::GenericAgent, std::list<Agent::GenericAgent>> agent_mailbox_;

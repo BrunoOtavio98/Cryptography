@@ -41,4 +41,14 @@ bool CommunicationChannel::ListenToAgent(const Agent::GenericAgent &agent, const
     return false;
 }
 
+bool CommunicationChannel::ListenToAllAgents(const Agent::GenericAgent &agent)
+{
+    for(auto &agent_mail : agent_mailbox_)
+    {
+        agent_mail.second.push_back(agent);
+    }
+
+    return true;
+}
+
 }
