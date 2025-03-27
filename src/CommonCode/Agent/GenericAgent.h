@@ -3,6 +3,7 @@
 
 #include <memory>
 #include <string>
+#include <thread>
 
 namespace Channel {
     class CommunicationChannel;
@@ -23,20 +24,18 @@ public:
     GenericAgent& operator=(GenericAgent &&other) = default;
 
     std::string GetAgentId() const { return agent_id_; }
-    void ReceiveMessage(const std::string &message, const std::string &agent_id_that_sent);
-    void SendMessage(const std::string &message, const std::string &agent_id_to_send);
+
+   virtual void ReceiveMessage(const std::string &message, const std::string &agent_id_that_sent);
+   virtual void SendMessage(const std::string &message, const std::string &agent_id_to_send);
 
     bool operator<(const GenericAgent &other) const {
         return this->agent_id_ < other.agent_id_;
     }
 
-    static std::string GetBroadcastId() {
-        return "";
-    }
-
-private:
+protected:
     std::string agent_id_;
     std::shared_ptr<Channel::CommunicationChannel> channel_;
+    virtual void ThreadFunction();
 };
 
 }

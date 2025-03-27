@@ -1,5 +1,6 @@
 #include "Channel/CommunicationChannel.h"
 #include "Agent/GenericAgent.h"
+#include "Agent/MaliciousAgent.h"
 
 namespace Channel {
 
@@ -13,43 +14,33 @@ CommunicationChannel::~CommunicationChannel()
 
 void CommunicationChannel::RegisterAgent(const Agent::GenericAgent &agent)
 {
-    agent_mailbox_[agent] = {};
+    agent_list_.push_back(agent);    
+}
+
+void CommunicationChannel::RegisterMaliciousAgent(const Agent::MaliciousAgent &malicious_agent)
+{
+    malicious_agent_list_.push_back(malicious_agent);
 }
 
 bool CommunicationChannel::SendMessage(const Agent::GenericAgent &agent, const std::string &message, const std::string &agent_id_to_receive)
-{    
-    auto agent_receivers = agent_mailbox_.find(agent);
-    if(agent_receivers != agent_mailbox_.end())
+{      
+    std::string final_message = message;
+    
+    if( malicious_agent_list_.size() )
     {
-        auto list_receivers = agent_mailbox_[agent];
-        for(auto receiver : list_receivers)
+        for (auto &malicious_agent : malicious_agent_list_)
         {
-            if( agent_id_to_receive.length() == 0 || (receiver.GetAgentId() == agent_id_to_receive) ) {
-                receiver.ReceiveMessage(message, agent_id_to_receive);
-            }
+            malicious_agent.InterceptMessage(final_message, agent.GetAgentId(), agent_id_to_receive);
         }
     }
-    return true;
-}
 
-bool CommunicationChannel::ListenToAgent(const Agent::GenericAgent &agent, const Agent::GenericAgent &agent_to_listen)
-{
-    auto agent_receivers = agent_mailbox_.find(agent_to_listen);
-    if(agent_receivers != agent_mailbox_.end())
-    {
-        agent_mailbox_[agent_to_listen].push_back(agent);
-        return true;
+    for (auto &current_agent : agent_list_)
+    {   
+        if(agent_id_to_receive == current_agent.GetAgentId() )
+        {
+            current_agent.ReceiveMessage(final_message, agent.GetAgentId());
+        }
     }
-    return false;
-}
-
-bool CommunicationChannel::ListenToAllAgents(const Agent::GenericAgent &agent)
-{
-    for(auto &agent_mail : agent_mailbox_)
-    {
-        agent_mail.second.push_back(agent);
-    }
-
     return true;
 }
 
