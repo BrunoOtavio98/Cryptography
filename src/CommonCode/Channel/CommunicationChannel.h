@@ -7,7 +7,8 @@
 
 namespace Agent
 {
-class GenericAgent;    
+class GenericAgent;
+class MaliciousAgent;
 }
 
 namespace Channel {
@@ -18,12 +19,12 @@ public:
     CommunicationChannel();
     ~CommunicationChannel();
     void RegisterAgent(const Agent::GenericAgent &agent);
-    bool SendMessage(const Agent::GenericAgent &agent, const std::string &message);
-    bool ListenToAgent(const Agent::GenericAgent &agent, const Agent::GenericAgent &agent_to_listen);
-    bool ListenToAllAgents(const Agent::GenericAgent &agent);
+    void RegisterMaliciousAgent(const Agent::MaliciousAgent &malicious_agent);
+    bool SendMessage(const Agent::GenericAgent &agent, const std::string &message, const std::string &agent_id_to_receive);
 
 private:
-    std::map<Agent::GenericAgent, std::list<Agent::GenericAgent>> agent_mailbox_;
+    std::list<Agent::GenericAgent> agent_list_;
+    std::list<Agent::MaliciousAgent> malicious_agent_list_;
 };
 
 }
